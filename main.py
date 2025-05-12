@@ -10,17 +10,7 @@ parser = argparse.ArgumentParser(description='DJI Mavic 3 RC231, RC-N1)')
 parser.add_argument('-p', '--port', help='RC Serial Port')
 
 args = parser.parse_args()
-gamepad = vg.VX360Gamepad()
 camera = 0
-
-events = (
-    gamepad.left_trigger,
-    gamepad.left_joystick(-16384, 16384),
-    gamepad.right_joystick(-16384, 16384),
-    )
-
-gamepad.reset()
-time.sleep(1)
 
 def calc_checksum(packet, plength):
 
@@ -150,6 +140,13 @@ except serial.SerialException as e:
     print('Could not open serial port:', e)
     exit(1)
 
+# Define gamepad.
+print('Create virtual gamepad')
+
+gamepad = vg.VX360Gamepad()
+gamepad.reset()
+time.sleep(1)
+
 # Stylistic: Newline for spacing.
 print('\nDji RC231 emulation started...\n')
 print('\nClose terminal to stop\n')
@@ -265,8 +262,6 @@ try:
             camera = parseInput(data[25:27], 'cam')
 
             #print(data)
-            #with uinput.Device(events) as device:
-            #time.sleep(1)
         #else:
             # print(len(data))
 
