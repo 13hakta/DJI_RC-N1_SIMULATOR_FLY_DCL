@@ -7,7 +7,7 @@ import serial.tools.list_ports
 import vgamepad as vg
 
 parser = argparse.ArgumentParser(description='DJI Mavic 3 RC231, RC-N1)')
-parser.add_argument('-p', '--port', help='RC Serial Port', default="COM9")
+parser.add_argument('-p', '--port', help='RC Serial Port')
 
 args = parser.parse_args()
 gamepad = vg.VX360Gamepad()
@@ -124,26 +124,28 @@ def send_duml(s, source, target, cmd_type, cmd_set, cmd_id, payload = None):
 
     sequence_number += 1
 
-print('app version: 3.0.0\n')
-# Open serial.
-try:
-
-    result = []
+def find_port():
     ports = serial.tools.list_ports.comports(True)
 
     for port in ports:
-        try:
-            print(port.description)
-            if port.description.find("For Protocol") != -1:
-                print("found DJI USB VCOM For Protocol")
-                s = serial.Serial(port=port.name, baudrate=115200)
-                print('Opened serial port:', s.name)
-            else:
-                print("skip")
-            result.append(port)
-        except (OSError, serial.SerialException):
-            pass
+        if port.description.find("For Protocol") != -1:
+            print(f"Found: {port.description}")
+            return port.name
 
+    return None
+
+
+# Open serial.
+
+app_port = find_port() if args.port is None else args.port
+
+try:
+    if app_port is not None:
+        s = serial.Serial(port=app_port, baudrate=115200)
+        print('Opened serial port:', s.name)
+    else:
+        print('DJI USB VCOM port not found or not specified.')
+        exit(2)
 except serial.SerialException as e:
     print('Could not open serial port:', e)
     exit(1)
