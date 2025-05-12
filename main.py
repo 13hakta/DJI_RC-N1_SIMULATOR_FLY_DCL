@@ -152,10 +152,11 @@ time.sleep(1)
 print('\nDji RC231 emulation started...\n')
 print('\nClose terminal to stop\n')
 
-print('*******************************************************\n')
-print('* Telegram: https://t.me/DJI_RC_N1_SIMULATOR_FLY_DC   *\n')
-print('* Donate: https://www.buymeacoffee.com/ivanyakymenko  *\n')
-print('*******************************************************\n')
+print('*******************************************************')
+print('* Telegram: https://t.me/IvanYakymenko                *')
+print('* Telegram: https://t.me/vchekryzhev                  *')
+print('* Donate: https://www.buymeacoffee.com/ivanyakymenko  *')
+print('*******************************************************')
 
 # Process input (min 364, center 1024, max 1684) -> (min 0, center 16384, max 32768)
 def parseInput(input, name):
