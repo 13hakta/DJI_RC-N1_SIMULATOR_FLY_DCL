@@ -218,8 +218,9 @@ try:
     # enable simulator mode for RC (without this stick positions are sent very slow by RC)
     send_duml(s, 0x0a, 0x06, 0x40, 0x06, 0x24, bytearray.fromhex('01'))
 
-    while True:
+    h_55 = bytearray.fromhex('55')
 
+    while True:
         #time.sleep(0.1)
         # read channel values
         send_duml(s, 0x0a, 0x06, 0x40, 0x06, 0x01, bytearray.fromhex(''))
@@ -231,7 +232,7 @@ try:
         buffer = bytearray.fromhex('')
         while True:
             b = s.read(1)
-            if b == bytearray.fromhex('55'):
+            if b == h_55:
                 buffer.extend(b)
                 ph = s.read(2)
                 buffer.extend(ph)
