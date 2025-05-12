@@ -170,19 +170,45 @@ def parseInput(input, name):
 st = {"rh": 0, "rv": 0, "lh": 0, "lv": 0}
 
 def threaded_function():
+    last_camera = 0
+    updated = False
+    last_l = 0
+    last_r = 0
+
     while(True):
         time.sleep(0.1)
         #print("working ...")
-        gamepad.left_joystick(int(st["lh"]), int(st["lv"]))
-        gamepad.right_joystick(int(st["rh"]), int(st["rv"]))
-        if camera > 32000:
-            gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_Y) #restart race
-        if camera < -32000:
-            gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_B) #recover drone
-        if camera == 0:
-            gamepad.release_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_Y)
-            gamepad.release_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_B)
-        gamepad.update()
+        lh = int(st["lh"])
+        lv = int(st["lv"])
+        rh = int(st["rh"])
+        rv = int(st["rv"])
+
+        l = lh + lv
+        if last_l != l:
+            last_l = l
+            updated = True
+            gamepad.left_joystick(lh, lv)
+
+        r = rh + rv
+        if last_r != r:
+            last_r = r
+            updated = True
+            gamepad.right_joystick(rh, rv)
+
+        if last_camera != camera:
+            last_camera = camera
+            updated = True
+
+            if camera > 32000:
+                gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_Y) #restart race
+            if camera < -32000:
+                gamepad.press_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_B) #recover drone
+            if camera == 0:
+                gamepad.release_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_Y)
+                gamepad.release_button(vg.XUSB_BUTTON.XUSB_GAMEPAD_B)
+
+        if updated:
+            gamepad.update()
 
 thread = Thread(target = threaded_function, args = ())
 thread.start()
