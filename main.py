@@ -123,6 +123,8 @@ def find_port():
 
     return None
 
+print('app version: 3.1.0\n')
+
 
 # Open serial.
 
